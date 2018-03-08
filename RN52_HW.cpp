@@ -536,11 +536,11 @@ void RN52_HW3::setExtFeatures(short settings)
 
 /** 
     Returns Bit 0 of the ext features result
-        GPIO10	Volume Down
-        GPIO11	Previous Track
-        GPIO12	Next Track
-        GPIO13	Play/Pause
-        GPIO5	Volume Up
+        GPIO10  Volume Down
+        GPIO11  Previous Track
+        GPIO12  Next Track
+        GPIO13  Play/Pause
+        GPIO5   Volume Up
 **/
 bool RN52_HW3::AVRCPButtons()
 {
@@ -549,11 +549,11 @@ bool RN52_HW3::AVRCPButtons()
 
 /** 
     Sets Bit 0 of the ext features 
-        GPIO10	Volume Down
-        GPIO11	Previous Track
-        GPIO12	Next Track
-        GPIO13	Play/Pause
-        GPIO5	Volume Up
+        GPIO10  Volume Down
+        GPIO11  Previous Track
+        GPIO12  Next Track
+        GPIO13  Play/Pause
+        GPIO5   Volume Up
 **/
 void RN52_HW3::AVRCPButtons(bool state)
 {
