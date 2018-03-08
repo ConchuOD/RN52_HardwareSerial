@@ -9,9 +9,13 @@
     Go through variable sizes
     Test ALL commands
 **/
-/* Teensyduino Core Library
+/* Teensy Library
+ * Derived from Teensy's hardware serial
  * http://www.pjrc.com/teensy/
  * Copyright (c) 2017 PJRC.COM, LLC.
+ * A significant number of RN52 specific functions have been taken from 
+ * the RN52 library written by Thomas Cousins for http://doayee.co.uk
+ * Adapted for hardware serial by me.
  *
  * Permission is hereby granted, free of charge, to any person obtaining
  * a copy of this software and associated documentation files (the
