@@ -44,7 +44,7 @@
  */
 
 #include "RN52_HW.h"
-
+#include "WString.h"
 HardwareSerial3 Serial3;
 
 /**
@@ -58,7 +58,7 @@ short RN52_HW3::IO;
 short RN52_HW3::IOState;
 
 /**
-    a gift from Paul
+    Two gifts from Paul
 **/
 void serialEvent3() __attribute__((weak));
 void serialEvent3() {}
@@ -193,7 +193,7 @@ String RN52_HW3::name(void)
   while (c != '\r')
   {
     c = read();
-    nom += c; //string.h's overloaded + operator adds new character to string?
+    nom += c; //String.h's overloaded + operator adds new character to String?
   }
   return nom;
 }
@@ -329,7 +329,7 @@ String RN52_HW3::trackTitle()
 {
   String metaData = getMetaData();
   int n = metaData.indexOf("Title=") + 6;
-  if (n != -1) {    //removes everything in metadata string before title & everything after newline char
+  if (n != -1) {    //removes everything in metadata String before title & everything after newline char
     metaData.remove(0, n);
     n = metaData.indexOf('\n');
     metaData.remove(n);
@@ -345,7 +345,7 @@ String RN52_HW3::album()
 {
   String metaData = getMetaData();
   int n = metaData.indexOf("Album=") + 6;
-  if (n != -1) {    //removes everything in metadata string before album & everything after newline char
+  if (n != -1) {    //removes everything in metadata String before album & everything after newline char
     metaData.remove(0, n);
     n = metaData.indexOf('\n');
     metaData.remove(n);
@@ -1223,7 +1223,7 @@ int RN52_HW3::microphoneLevel(void)
         Up to 20 alphanumeric characters
 
 **/
-void RN52_HW3::pincode(string pinCode)
+void RN52_HW3::pincode(String pinCode)
 {
     print("SP,"); //send command
     println(pinCode);
@@ -1234,7 +1234,7 @@ void RN52_HW3::pincode(string pinCode)
     Gets the security pin code
         Up to 20 alphanumeric characters
 **/
-string RN52_HW3::pincode(void)
+String RN52_HW3::pincode(void)
 {
   while (available() > 0)   //clear buffer
   {
@@ -1247,7 +1247,7 @@ string RN52_HW3::pincode(void)
   while (c != '\r')
   {
     c = read();
-    pinCode += c; //string.h's overloaded + operator adds new character to string?
+    pinCode += c; //String.h's overloaded + operator adds new character to String?
   }
   return pinCode;
 }
@@ -1436,7 +1436,7 @@ String RN52_HW3::getBatteryLevel()
       if (c == '\n') i--;
     }
   int n = batteryLevel.indexOf("AGBatteryLevel =") + 16;
-  if (n != -1) {    //removes everything in metadata string before title & everything after newline char
+  if (n != -1) {    //removes everything in metadata String before title & everything after newline char
     batteryLevel.remove(0, n);
     n = batteryLevel.indexOf('\n');
     batteryLevel.remove(n);
@@ -1461,7 +1461,7 @@ String RN52_HW3::firmwareV(void)
   while (c != '\r')
   {
     c = read();
-    ver += c; //string.h's overloaded + operator adds new character to string?
+    ver += c; //String.h's overloaded + operator adds new character to String?
   }
   return ver;
 }
@@ -1592,7 +1592,7 @@ void RN52_HW3::activateVCApp(void)
         0   Unmute
         1   Mute
 **/
-void RN52_HW3::swapActiveDevice(bool action)
+void RN52_HW3::muteCall(bool action)
 {
   print("M,");
   println(action);
@@ -1669,11 +1669,11 @@ String RN52_HW3::callerNumber()
         2               04      A2DP
         3               08      HFP 
 **/
-void RN52_HW3::connectionMask(int mask)
+void RN52_HW3::killConnection(int connID)
 {
     print("K,"); //send command
-    if (mask < 16) print("0");
-    println(mask, HEX);
+    if (connID < 16) print("0");
+    println(connID, HEX);
     delay(50);
 }
 
@@ -1735,16 +1735,13 @@ int RN52_HW3::queryState(void)
   }
   return state;
 }
-/*
-    Format for AT commands
-*/
 
 /**
     Gets the HFP volume levels in audio gateway
         0   Audio volume level
         1   Mic volume level
 **/
-int RN52_HW3::swapActiveDevice(bool action)
+int RN52_HW3::hfpVolumeLevel(bool action) //FIX THIS*****
 {
   print("Y,");
   println(action);

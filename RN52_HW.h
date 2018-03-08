@@ -177,6 +177,7 @@ void serial3_clear(void);
 //
 #ifdef __cplusplus
 #include "Stream.h"
+#include "WString.h"
 class RN52_HW : public Stream
 {
 private:
@@ -340,8 +341,8 @@ public:
     int connectionMask(void);
     void microphoneLevel(int levels);
     int microphoneLevel(void);
-    void pincode(string pinCode);
-    string pincode(void);
+    void pincode(String pinCode);
+    String pincode(void);
     void toneGain(int gain);
     int toneGain(void);
     void connDelay(int cDelay);
@@ -366,13 +367,13 @@ public:
     void transferActiveCall(void);
     void swapActiveDevice(bool action); 
     void activateVCApp(void);
-    void connectionMask(int mask);
-    void swapActiveDevice(bool action); 
+    void killConnection(int connID);
+    void muteCall(bool action); 
     int queryState(void);
-    //Y
-    String getCallerID();
-    String callerName();
-    String callerNumber();
+    int hfpVolumeLevel(bool action);
+    String getCallerID(void);
+    String callerName(void);
+    String callerNumber(void);
     void rebootDevice(void); 
     void wipePairedDevices(void);
 };
