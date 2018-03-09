@@ -45,6 +45,8 @@
 **/
 #include "RN52_HardwareSerial.h"
 #include "WString.h"
+#include "util/delay.h"
+#include <Arduino.h>
 RN52_HardwareSerial3 RN52_Serial3;
 
 /**
@@ -305,7 +307,7 @@ String RN52_HardwareSerial3::getMetaData()
   while (available() == 0);
   String metaData;
   int i = 6;
-  long count;
+  long count = 0;
   while (i != 0) //loop six times for six lines of data
   {
     if (available() > 0)
@@ -1022,6 +1024,7 @@ void RN52_HardwareSerial3::authentication(int auth)
   print("SA,");
   println(auth);
   delay(50);
+}
 
 /**
     Gets the Class of Device
@@ -1044,7 +1047,7 @@ int RN52_HardwareSerial3::classOfDevice(void)
     cod += (c - '0');
     delay(50);
   }
-  return auth;
+  return cod;
 }
 /**
     Sets the Class of Device  
@@ -1368,7 +1371,7 @@ int RN52_HardwareSerial3::connDelay(void)
     cod += (c - '0');
     delay(50);
   }
-  return auth;
+  return cod;
 }
 /**
     Sets the delay between connection tries in milliseconds
@@ -1402,7 +1405,7 @@ int RN52_HardwareSerial3::pairingTimeout(void)
     cod += (c - '0');
     delay(50);
   }
-  return auth;
+  return cod;
 }
 /**
     Sets the pairing timeout in seconds.
@@ -1424,6 +1427,7 @@ String RN52_HardwareSerial3::getBatteryLevel()
   {
     char c = read();
   }
+  int i;
   println("GB");
   while (available() == 0);
   String batteryLevel;
@@ -1628,7 +1632,7 @@ String RN52_HardwareSerial3::getCallerID()
   while (available() == 0);
   String iD;
   int i = 2;
-  long count;
+  long count = 0;
   while (i != 0) //loop two times for two lines of data
   {
     if (available() > 0)
@@ -1761,7 +1765,7 @@ int RN52_HardwareSerial3::hfpVolumeLevel(bool action) //FIX THIS*****
       level += (c - 'A') + 10;
     }
   }
-  return state;
+  return level;
 }
 
 

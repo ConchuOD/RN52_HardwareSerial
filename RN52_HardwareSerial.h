@@ -49,7 +49,6 @@
 // Teensy 3.x boards support 9 bit mode on all their serial ports
 // Teensy LC only supports 9 bit mode on Serial1.  Serial2 & Serial3 can't use 9 bits.
 
-
 #define SERIAL_7E1 0x02
 #define SERIAL_7O1 0x03
 #define SERIAL_8N1 0x00
@@ -140,6 +139,43 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
+void serial_begin(uint32_t divisor);
+void serial_format(uint32_t format);
+void serial_end(void);
+void serial_set_transmit_pin(uint8_t pin);
+void serial_set_rx(uint8_t pin);
+void serial_set_tx(uint8_t pin, uint8_t opendrain);
+int serial_set_rts(uint8_t pin);
+int serial_set_cts(uint8_t pin);
+void serial_putchar(uint32_t c);
+void serial_write(const void *buf, unsigned int count);
+void serial_flush(void);
+int serial_write_buffer_free(void);
+int serial_available(void);
+int serial_getchar(void);
+int serial_peek(void);
+void serial_clear(void);
+void serial_print(const char *p);
+void serial_phex(uint32_t n);
+void serial_phex16(uint32_t n);
+void serial_phex32(uint32_t n);
+
+void serial2_begin(uint32_t divisor);
+void serial2_format(uint32_t format);
+void serial2_end(void);
+void serial2_set_transmit_pin(uint8_t pin);
+void serial2_set_rx(uint8_t pin);
+void serial2_set_tx(uint8_t pin, uint8_t opendrain);
+int serial2_set_rts(uint8_t pin);
+int serial2_set_cts(uint8_t pin);
+void serial2_putchar(uint32_t c);
+void serial2_write(const void *buf, unsigned int count);
+void serial2_flush(void);
+int serial2_write_buffer_free(void);
+int serial2_available(void);
+int serial2_getchar(void);
+int serial2_peek(void);
+void serial2_clear(void);
 
 void serial3_begin(uint32_t divisor);
 void serial3_format(uint32_t format);
@@ -157,6 +193,57 @@ int serial3_available(void);
 int serial3_getchar(void);
 int serial3_peek(void);
 void serial3_clear(void);
+
+void serial4_begin(uint32_t divisor);
+void serial4_format(uint32_t format);
+void serial4_end(void);
+void serial4_set_transmit_pin(uint8_t pin);
+void serial4_set_rx(uint8_t pin);
+void serial4_set_tx(uint8_t pin, uint8_t opendrain);
+int serial4_set_rts(uint8_t pin);
+int serial4_set_cts(uint8_t pin);
+void serial4_putchar(uint32_t c);
+void serial4_write(const void *buf, unsigned int count);
+void serial4_flush(void);
+int serial4_write_buffer_free(void);
+int serial4_available(void);
+int serial4_getchar(void);
+int serial4_peek(void);
+void serial4_clear(void);
+
+void serial5_begin(uint32_t divisor);
+void serial5_format(uint32_t format);
+void serial5_end(void);
+void serial5_set_transmit_pin(uint8_t pin);
+void serial5_set_rx(uint8_t pin);
+void serial5_set_tx(uint8_t pin, uint8_t opendrain);
+int serial5_set_rts(uint8_t pin);
+int serial5_set_cts(uint8_t pin);
+void serial5_putchar(uint32_t c);
+void serial5_write(const void *buf, unsigned int count);
+void serial5_flush(void);
+int serial5_write_buffer_free(void);
+int serial5_available(void);
+int serial5_getchar(void);
+int serial5_peek(void);
+void serial5_clear(void);
+
+void serial6_begin(uint32_t divisor);
+void serial6_format(uint32_t format);
+void serial6_end(void);
+void serial6_set_transmit_pin(uint8_t pin);
+void serial6_set_rx(uint8_t pin);
+void serial6_set_tx(uint8_t pin, uint8_t opendrain);
+int serial6_set_rts(uint8_t pin);
+int serial6_set_cts(uint8_t pin);
+void serial6_putchar(uint32_t c);
+void serial6_write(const void *buf, unsigned int count);
+void serial6_flush(void);
+int serial6_write_buffer_free(void);
+int serial6_available(void);
+int serial6_getchar(void);
+int serial6_peek(void);
+void serial6_clear(void);
 
 #ifdef __cplusplus
 }
