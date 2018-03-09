@@ -1,0 +1,8 @@
+TODO:  
+    Change discoMask input type to be just 8 bits long
+    Finish other serials
+    Track duration/Total count
+    Caller name/number
+    <Y,?> output type
+    Go through variable sizes
+    Test ALL commands

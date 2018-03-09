@@ -1,14 +1,4 @@
 /** ONLY FOR SERIAL3 **/
-/** TODO:
-    Change copyright
-    Change discoMask input type to be just 8 bits long
-    Finish other serials
-    Track duration/Total count
-    Caller name/number
-    <Y,?> output type
-    Go through variable sizes
-    Test ALL commands
-**/
 /* Teensy Library
  * Derived from Teensy's hardware serial
  * http://www.pjrc.com/teensy/
