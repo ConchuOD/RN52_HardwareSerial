@@ -1,4 +1,4 @@
-#include "C:/tmp/eagle/BTS/RN52/RN52_HardwareSerial.h"
+#include <RN52_HardwareSerial.h>
 //TODO: add tests for the calling functions
 void rebooter(void){  //run this after using a set command
     Serial.println("__Rebooting__\n");
@@ -203,7 +203,7 @@ void setup() {
     //finally reset and reboot
     Serial.print("Factory resetting and rebooting...");
     RN52_Serial.factoryReset();
-    rebooter();  
+    rebooter();
 }
 
 void loop() {
