@@ -168,7 +168,7 @@ void serial3_clear(void);
 #ifdef __cplusplus
 #include "Stream.h"
 #include "WString.h"
-class RN52_HW : public Stream
+class RN52_HardwareSerial : public Stream
 {
 private:
     static short IOMask;
@@ -178,7 +178,7 @@ private:
     static short IO;
     static short IOState;   
 public:
-    constexpr RN52_HW() {}
+    constexpr RN52_HardwareSerial() {}
     virtual void begin(uint32_t baud) { serial_begin(BAUD2DIV(baud)); }
     virtual void begin(uint32_t baud, uint32_t format) {
                       serial_begin(BAUD2DIV(baud));
@@ -211,7 +211,7 @@ public:
 };
 
 
-class RN52_HW3 : public RN52_HW
+class RN52_HardwareSerial3 : public RN52_HardwareSerial
 {
 private:
     static short IOMask;
@@ -221,7 +221,7 @@ private:
     static short IO;
     static short IOState;
 public:
-    constexpr RN52_HW3() {}
+    constexpr RN52_HardwareSerial3() {}
     virtual void begin(uint32_t baud) { serial3_begin(BAUD2DIV3(baud)); }
     virtual void begin(uint32_t baud, uint32_t format) {
                       serial3_begin(BAUD2DIV3(baud));
@@ -367,7 +367,7 @@ public:
     void rebootDevice(void); 
     void wipePairedDevices(void);
 };
-extern HardwareSerial3 Serial3;
+extern RN52_HardwareSerial3 RN52_Serial3;
 extern void serialEvent3(void);
 
 

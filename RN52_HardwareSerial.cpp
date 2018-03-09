@@ -33,19 +33,29 @@
  * SOFTWARE.
  */
 
+ /**
+    Note to self - Ask for someone more knowledgeable to confirm the following:
+        print() and println() appear to be non virtual functions in the
+        print class (parent of stream) that call write(), so print via UART?
+            -- this seems to be how virtual functions work. I can call print
+            and it will use print()/println() from the print call but the 
+            inner call to write() will use the version relating to the RN52_HW#
+            class as it has been declared as a virtual function so uses the
+            "lower-most" definition.
+**/
 #include "RN52_HardwareSerial.h"
 #include "WString.h"
-HardwareSerial3 Serial3;
+RN52_HardwareSerial3 RN52_Serial3;
 
 /**
     mask stuff
 **/
-short RN52_HW3::IOMask = 0x0004;
-short RN52_HW3::IOProtect = 0x3C64;
-short RN52_HW3::IOStateMask = 0x0094;
-short RN52_HW3::IOStateProtect = 0x3CF4;
-short RN52_HW3::IO;
-short RN52_HW3::IOState;
+short RN52_HardwareSerial3::IOMask = 0x0004;
+short RN52_HardwareSerial3::IOProtect = 0x3C64;
+short RN52_HardwareSerial3::IOStateMask = 0x0094;
+short RN52_HardwareSerial3::IOStateProtect = 0x3CF4;
+short RN52_HardwareSerial3::IO;
+short RN52_HardwareSerial3::IOState;
 
 /**
     Two gifts from Paul
@@ -56,10 +66,8 @@ void serialEvent3() {}
 /**
     This function sets the RN52's GPIO pin directions.
     Only PIN 5, 10, 11, 12 & 13 are modifiable.
-    print() and println() appear to be non virtual functions in the
-    print class (parent of stream) that call write(), so print via UART.  
 **/
-bool RN52_HW3::GPIOPinMode(int pin, bool state)
+bool RN52_HardwareSerial3::GPIOPinMode(int pin, bool state)
 {
   if (state) IO = IO | (1 << pin);  //select pin to change if state is 1
   else {                            //select pin to change if state is 0, using mask to protect command mode
@@ -90,7 +98,7 @@ bool RN52_HW3::GPIOPinMode(int pin, bool state)
 /**
     Writes outputs high or low, if inputs enables/disables internal pullup
 **/
-void RN52_HW3::GPIODigitalWrite(int pin, bool state)
+void RN52_HardwareSerial3::GPIODigitalWrite(int pin, bool state)
 {
   if (state) IOState = IOState | (1 << pin);    //select pin to change if state is 1
   else {                                        //select pin to change if state is 0, using mask to protect command mode
@@ -109,7 +117,7 @@ void RN52_HW3::GPIODigitalWrite(int pin, bool state)
 /**
     Reads back the current state of the GPIO
 **/
-bool RN52_HW3::GPIODigitalRead(int pin)
+bool RN52_HardwareSerial3::GPIODigitalRead(int pin)
 {
   while (available() > 0) //clear read buffer
   {
@@ -139,7 +147,7 @@ bool RN52_HW3::GPIODigitalRead(int pin)
 /**
     Does what it says on the tin
 **/
-void RN52_HW3::setDiscoverability(bool discoverable)
+void RN52_HardwareSerial3::setDiscoverability(bool discoverable)
 {
   print("@,");
   println(discoverable);
@@ -149,7 +157,7 @@ void RN52_HW3::setDiscoverability(bool discoverable)
 /**
     Does what it says on the tin
 **/
-void RN52_HW3::toggleEcho()
+void RN52_HardwareSerial3::toggleEcho()
 {
   println("+");
   delay(50);
@@ -158,7 +166,7 @@ void RN52_HW3::toggleEcho()
 /**
     Sets the name of the RN52
 **/
-void RN52_HW3::name(String nom, bool normalized)
+void RN52_HardwareSerial3::name(String nom, bool normalized)
 {
   print("S");
   if (normalized) print("-,");  //retain the last part of the MAC address
@@ -170,7 +178,7 @@ void RN52_HW3::name(String nom, bool normalized)
 /**
     Gets the name of the RN52
 **/
-String RN52_HW3::name(void)
+String RN52_HardwareSerial3::name(void)
 {
   while (available() > 0)   //clear buffer
   {
@@ -191,7 +199,7 @@ String RN52_HW3::name(void)
 /**
     Does what it says on the tin
 **/
-void RN52_HW3::factoryReset()
+void RN52_HardwareSerial3::factoryReset()
 {
   println("SF,1");
   delay(50);
@@ -200,7 +208,7 @@ void RN52_HW3::factoryReset()
 /**
     Gets the idle power down timer
 **/
-int RN52_HW3::idlePowerDownTime(void)
+int RN52_HardwareSerial3::idlePowerDownTime(void)
 {
   while (available() > 0)   //clear buffer
   {
@@ -222,7 +230,7 @@ int RN52_HW3::idlePowerDownTime(void)
 /**
     Sets the idle power down timer
 **/
-void RN52_HW3::idlePowerDownTime(int timer)
+void RN52_HardwareSerial3::idlePowerDownTime(int timer)
 {
   print("S^,");
   println(timer);
@@ -232,7 +240,7 @@ void RN52_HW3::idlePowerDownTime(int timer)
 /**
     Does what it says on the tin
 **/
-void RN52_HW3::reboot()
+void RN52_HardwareSerial3::reboot()
 {
   println("R,1");
   delay(2000);
@@ -241,7 +249,7 @@ void RN52_HW3::reboot()
 /**
     Calls the specified number
 **/
-void RN52_HW3::call(String number)
+void RN52_HardwareSerial3::call(String number)
 {
   print("A,");
   println(number);
@@ -251,7 +259,7 @@ void RN52_HW3::call(String number)
 /**
     Ends the current call
 **/
-void RN52_HW3::endCall()
+void RN52_HardwareSerial3::endCall()
 {
   println("E");
   delay(50);
@@ -260,7 +268,7 @@ void RN52_HW3::endCall()
 /**
     Toggles pause on the music
 **/
-void RN52_HW3::playPause()
+void RN52_HardwareSerial3::playPause()
 {
   println("AP");
   delay(50);
@@ -269,7 +277,7 @@ void RN52_HW3::playPause()
 /**
     Skips forward a track
 **/
-void RN52_HW3::nextTrack()
+void RN52_HardwareSerial3::nextTrack()
 {
   println("AT+");
   delay(50);
@@ -278,7 +286,7 @@ void RN52_HW3::nextTrack()
 /**
     Returns to the previous track
 **/
-void RN52_HW3::prevTrack()
+void RN52_HardwareSerial3::prevTrack()
 {
   println("AT-");
   delay(50);
@@ -287,7 +295,7 @@ void RN52_HW3::prevTrack()
 /** 
     Gets the track's metadata
 **/
-String RN52_HW3::getMetaData()
+String RN52_HardwareSerial3::getMetaData()
 {
   while (available() > 0)   //clear buffer
   {
@@ -315,7 +323,7 @@ String RN52_HW3::getMetaData()
 /** 
     Extracts the song title from the metadata
 **/
-String RN52_HW3::trackTitle()
+String RN52_HardwareSerial3::trackTitle()
 {
   String metaData = getMetaData();
   int n = metaData.indexOf("Title=") + 6;
@@ -331,7 +339,7 @@ String RN52_HW3::trackTitle()
 /** 
     Extracts the album from the metadata
 **/
-String RN52_HW3::album()
+String RN52_HardwareSerial3::album()
 {
   String metaData = getMetaData();
   int n = metaData.indexOf("Album=") + 6;
@@ -347,7 +355,7 @@ String RN52_HW3::album()
 /** 
     Extracts the artist from the metadata
 **/
-String RN52_HW3::artist()
+String RN52_HardwareSerial3::artist()
 {
   String metaData = getMetaData();
   int n = metaData.indexOf("Artist=") + 7;
@@ -363,7 +371,7 @@ String RN52_HW3::artist()
 /** 
     Extracts the genre from the metadata
 **/
-String RN52_HW3::genre()
+String RN52_HardwareSerial3::genre()
 {
   String metaData = getMetaData();
   int n = metaData.indexOf("Genre=") + 6;
@@ -379,7 +387,7 @@ String RN52_HW3::genre()
 /** 
     Extracts the track number from the metadata - what even is this? For CD players?
 **/
-int RN52_HW3::trackNumber()
+int RN52_HardwareSerial3::trackNumber()
 {
   int trackNumber;
   String metaData = getMetaData();
@@ -397,7 +405,7 @@ int RN52_HW3::trackNumber()
 /** 
     Extracts the track duration from the metadata
 **/
-int RN52_HW3::trackDuration()
+int RN52_HardwareSerial3::trackDuration()
 {
     return 0;
 }
@@ -405,7 +413,7 @@ int RN52_HW3::trackDuration()
 /** 
     Extracts the totalCount from the metadata
 **/
-int RN52_HW3::totalCount()
+int RN52_HardwareSerial3::totalCount()
 {
     return 0;
 }
@@ -428,7 +436,7 @@ int RN52_HW3::totalCount()
         Bit 13 – Enable tones playback at fixed volume
         Bit 14 – Enable auto-accept passkey in Keyboard I/O Authentication mode
 **/
-short RN52_HW3::getExtFeatures()
+short RN52_HardwareSerial3::getExtFeatures()
 {
   while (available() > 0)   //clear buffer
   {
@@ -482,7 +490,7 @@ short RN52_HW3::getExtFeatures()
         Bit 13 – Enable tones playback at fixed volume
         Bit 14 – Enable auto-accept passkey in Keyboard I/O Authentication mode
 **/
-void RN52_HW3::setExtFeatures(bool state, int bit)
+void RN52_HardwareSerial3::setExtFeatures(bool state, int bit)
 {
   short toWrite;
   if (state) toWrite = getExtFeatures() | (1 << bit);
@@ -513,7 +521,7 @@ void RN52_HW3::setExtFeatures(bool state, int bit)
         Bit 13 – Enable tones playback at fixed volume
         Bit 14 – Enable auto-accept passkey in Keyboard I/O Authentication mode
 **/
-void RN52_HW3::setExtFeatures(short settings)
+void RN52_HardwareSerial3::setExtFeatures(short settings)
 {
   short toWrite = settings;
   print("S%,");
@@ -532,7 +540,7 @@ void RN52_HW3::setExtFeatures(short settings)
         GPIO13  Play/Pause
         GPIO5   Volume Up
 **/
-bool RN52_HW3::AVRCPButtons()
+bool RN52_HardwareSerial3::AVRCPButtons()
 {
   return (getExtFeatures()) & 1;
 }
@@ -545,7 +553,7 @@ bool RN52_HW3::AVRCPButtons()
         GPIO13  Play/Pause
         GPIO5   Volume Up
 **/
-void RN52_HW3::AVRCPButtons(bool state)
+void RN52_HardwareSerial3::AVRCPButtons(bool state)
 {
   setExtFeatures(state, 0);
 }
@@ -553,7 +561,7 @@ void RN52_HW3::AVRCPButtons(bool state)
 /** 
     Returns Bit 1 of the ext features result
 **/
-bool RN52_HW3::powerUpReconnect()
+bool RN52_HardwareSerial3::powerUpReconnect()
 {
   return (getExtFeatures() & (1 << 1)) >> 1;
 }
@@ -561,7 +569,7 @@ bool RN52_HW3::powerUpReconnect()
 /** 
     Sets Bit 1 of the ext features 
 **/
-void RN52_HW3::powerUpReconnect(bool state)
+void RN52_HardwareSerial3::powerUpReconnect(bool state)
 {
   setExtFeatures(state, 1);
 }
@@ -569,7 +577,7 @@ void RN52_HW3::powerUpReconnect(bool state)
 /** 
     Returns Bit 2 of the ext features result
 **/
-bool RN52_HW3::startUpDiscoverable()
+bool RN52_HardwareSerial3::startUpDiscoverable()
 {
   return (getExtFeatures() & (1 << 2)) >> 2;
 }
@@ -577,7 +585,7 @@ bool RN52_HW3::startUpDiscoverable()
 /** 
     Sets Bit 2 of the ext features 
 **/
-void RN52_HW3::startUpDiscoverable(bool state)
+void RN52_HardwareSerial3::startUpDiscoverable(bool state)
 {
   setExtFeatures(state, 2);
 }
@@ -585,7 +593,7 @@ void RN52_HW3::startUpDiscoverable(bool state)
 /** 
     Returns Bit 3 of the ext features result
 **/
-bool RN52_HW3::codecIndicators()
+bool RN52_HardwareSerial3::codecIndicators()
 {
   return (getExtFeatures() & (1 << 3)) >> 3;
 }
@@ -594,14 +602,14 @@ bool RN52_HW3::codecIndicators()
     Sets Bit 3 of the ext features 
 **/
 
-void RN52_HW3::codecIndicators(bool state)
+void RN52_HardwareSerial3::codecIndicators(bool state)
 {
   setExtFeatures(state, 3);
 }
 /** 
     Returns Bit 4 of the ext features result
 **/
-bool RN52_HW3::rebootOnDisconnect()
+bool RN52_HardwareSerial3::rebootOnDisconnect()
 {
   return (getExtFeatures() & (1 << 4)) >> 4;
 }
@@ -609,7 +617,7 @@ bool RN52_HW3::rebootOnDisconnect()
 /** 
     Sets Bit 4 of the ext features 
 **/
-void RN52_HW3::rebootOnDisconnect(bool state)
+void RN52_HardwareSerial3::rebootOnDisconnect(bool state)
 {
   setExtFeatures(state, 4);
 }
@@ -617,7 +625,7 @@ void RN52_HW3::rebootOnDisconnect(bool state)
 /** 
     Returns Bit 5 of the ext features result
 **/
-bool RN52_HW3::volumeToneMute()
+bool RN52_HardwareSerial3::volumeToneMute()
 {
   return (getExtFeatures() & (1 << 5)) >> 5;
 }
@@ -625,7 +633,7 @@ bool RN52_HW3::volumeToneMute()
 /** 
     Sets Bit 5 of the ext features 
 **/
-void RN52_HW3::volumeToneMute(bool state)
+void RN52_HardwareSerial3::volumeToneMute(bool state)
 {
   setExtFeatures(state, 5);
 }
@@ -633,7 +641,7 @@ void RN52_HW3::volumeToneMute(bool state)
 /** 
     Returns Bit 6 of the ext features result
 **/
-bool RN52_HW3::voiceCommandButton()
+bool RN52_HardwareSerial3::voiceCommandButton()
 {
   return (getExtFeatures() & (1 << 6)) >> 6;
 }
@@ -641,14 +649,14 @@ bool RN52_HW3::voiceCommandButton()
 /** 
     Sets Bit 6 of the ext features 
 **/
-void RN52_HW3::voiceCommandButton(bool state)
+void RN52_HardwareSerial3::voiceCommandButton(bool state)
 {
   setExtFeatures(state, 6);
 }
 /** 
     Returns Bit 7 of the ext features result
 **/
-bool RN52_HW3::systemTonesDisabled()
+bool RN52_HardwareSerial3::systemTonesDisabled()
 {
   return (getExtFeatures() & (1 << 7)) >> 7;
 }
@@ -656,7 +664,7 @@ bool RN52_HW3::systemTonesDisabled()
 /** 
     Sets Bit 7 of the ext features 
 **/
-void RN52_HW3::systemTonesDisabled(bool state)
+void RN52_HardwareSerial3::systemTonesDisabled(bool state)
 {
   setExtFeatures(state, 7);
 }
@@ -664,7 +672,7 @@ void RN52_HW3::systemTonesDisabled(bool state)
 /** 
     Returns Bit 8 of the ext features result
 **/
-bool RN52_HW3::powerDownAfterPairingTimeout()
+bool RN52_HardwareSerial3::powerDownAfterPairingTimeout()
 {
   return (getExtFeatures() & (1 << 8)) >> 8;
 }
@@ -672,7 +680,7 @@ bool RN52_HW3::powerDownAfterPairingTimeout()
 /** 
     Sets Bit 8 of the ext features 
 **/
-void RN52_HW3::powerDownAfterPairingTimeout(bool state)
+void RN52_HardwareSerial3::powerDownAfterPairingTimeout(bool state)
 {
   setExtFeatures(state, 8);
 }
@@ -680,7 +688,7 @@ void RN52_HW3::powerDownAfterPairingTimeout(bool state)
 /** 
     Returns Bit 9 of the ext features result
 **/
-bool RN52_HW3::resetAfterPowerDown()
+bool RN52_HardwareSerial3::resetAfterPowerDown()
 {
   return (getExtFeatures() & (1 << 9)) >> 9;
 }
@@ -688,7 +696,7 @@ bool RN52_HW3::resetAfterPowerDown()
 /** 
     Sets Bit 9 of the ext features result
 **/
-void RN52_HW3::resetAfterPowerDown(bool state)
+void RN52_HardwareSerial3::resetAfterPowerDown(bool state)
 {
   setExtFeatures(state, 9);
 }
@@ -696,7 +704,7 @@ void RN52_HW3::resetAfterPowerDown(bool state)
 /** 
     Returns Bit 10 of the ext features result
 **/
-bool RN52_HW3::reconnectAfterPanic()
+bool RN52_HardwareSerial3::reconnectAfterPanic()
 {
   return (getExtFeatures() & (1 << 10)) >> 10;
 }
@@ -704,7 +712,7 @@ bool RN52_HW3::reconnectAfterPanic()
 /** 
     Sets Bit 10 of the ext features result
 **/
-void RN52_HW3::reconnectAfterPanic(bool state)
+void RN52_HardwareSerial3::reconnectAfterPanic(bool state)
 {
   setExtFeatures(state, 10);
 }
@@ -712,7 +720,7 @@ void RN52_HW3::reconnectAfterPanic(bool state)
 /** 
     Returns Bit 11 of the ext features result
 **/
-bool RN52_HW3::latchEventIndicator()
+bool RN52_HardwareSerial3::latchEventIndicator()
 {
   return (getExtFeatures() & (1 << 11)) >> 11;
 }
@@ -720,14 +728,14 @@ bool RN52_HW3::latchEventIndicator()
 /** 
     Sets Bit 11 of the ext features result
 **/
-void RN52_HW3::latchEventIndicator(bool state)
+void RN52_HardwareSerial3::latchEventIndicator(bool state)
 {
   setExtFeatures(state, 11);
 }
 /** 
     Returns Bit 12 of the ext features result
 **/
-bool RN52_HW3::trackChangeEvent()
+bool RN52_HardwareSerial3::trackChangeEvent()
 {
   return (getExtFeatures() & (1 << 12)) >> 12;
 }
@@ -735,7 +743,7 @@ bool RN52_HW3::trackChangeEvent()
 /** 
     Sets Bit 12 of the ext features result
 **/
-void RN52_HW3::trackChangeEvent(bool state)
+void RN52_HardwareSerial3::trackChangeEvent(bool state)
 {
   setExtFeatures(state, 12);
 }
@@ -743,7 +751,7 @@ void RN52_HW3::trackChangeEvent(bool state)
 /** 
     Returns Bit 13 of the ext features result
 **/
-bool RN52_HW3::tonesAtFixedVolume()
+bool RN52_HardwareSerial3::tonesAtFixedVolume()
 {
   return (getExtFeatures() & (1 << 13)) >> 13;
 }
@@ -751,7 +759,7 @@ bool RN52_HW3::tonesAtFixedVolume()
 /** 
     Sets Bit 13 of the ext features result
 **/
-void RN52_HW3::tonesAtFixedVolume(bool state)
+void RN52_HardwareSerial3::tonesAtFixedVolume(bool state)
 {
   setExtFeatures(state, 13);
 }
@@ -759,7 +767,7 @@ void RN52_HW3::tonesAtFixedVolume(bool state)
 /** 
     Returns Bit 14 of the ext features result
 **/
-bool RN52_HW3::autoAcceptPasskey()
+bool RN52_HardwareSerial3::autoAcceptPasskey()
 {
   return (getExtFeatures() & (1 << 14)) >> 14;
 }
@@ -767,7 +775,7 @@ bool RN52_HW3::autoAcceptPasskey()
 /** 
     Sets Bit 14 of the ext features result
 **/
-void RN52_HW3::autoAcceptPasskey(bool state)
+void RN52_HardwareSerial3::autoAcceptPasskey(bool state)
 {
   setExtFeatures(state, 14);
 }
@@ -775,7 +783,7 @@ void RN52_HW3::autoAcceptPasskey(bool state)
 /** 
     Gets the Rn52's startup volume
 **/
-int RN52_HW3::volumeOnStartup(void)
+int RN52_HardwareSerial3::volumeOnStartup(void)
 {
   while (available() > 0)   //clear buffer
   {
@@ -806,7 +814,7 @@ int RN52_HW3::volumeOnStartup(void)
 /** 
     Sets the Rn52's startup volume
 **/
-void RN52_HW3::volumeOnStartup(int vol)
+void RN52_HardwareSerial3::volumeOnStartup(int vol)
 {
   print("SS,");
   print("0");
@@ -817,7 +825,7 @@ void RN52_HW3::volumeOnStartup(int vol)
 /** 
     Raises the current volume
 **/
-void RN52_HW3::volumeUp(void)
+void RN52_HardwareSerial3::volumeUp(void)
 {
   println("AV+");
   delay(50);
@@ -826,7 +834,7 @@ void RN52_HW3::volumeUp(void)
 /** 
     Lowers the current volume
 **/
-void RN52_HW3::volumeDown(void)
+void RN52_HardwareSerial3::volumeDown(void)
 {
   println("AV-");
   delay(50);
@@ -848,7 +856,7 @@ void RN52_HW3::volumeDown(void)
             2   44K1
             3   48K
 **/
-short RN52_HW3::getAudioRouting()
+short RN52_HardwareSerial3::getAudioRouting()
 {
   while (available() > 0)   //clear buffer
   {
@@ -882,7 +890,7 @@ short RN52_HW3::getAudioRouting()
             0   24
             1   32
 **/
-int RN52_HW3::sampleWidth()
+int RN52_HardwareSerial3::sampleWidth()
 {
   int width = (getAudioRouting() & 0x00F0) >> 4;
   return width;
@@ -894,7 +902,7 @@ int RN52_HW3::sampleWidth()
             0   24
             1   32
 **/
-void RN52_HW3::sampleWidth(int width)
+void RN52_HardwareSerial3::sampleWidth(int width)
 {
   short mask = getAudioRouting() & 0xFF0F;
   short toWrite = mask | (width << 4);
@@ -914,7 +922,7 @@ void RN52_HW3::sampleWidth(int width)
             2   44K1
             3   48K
 **/
-int RN52_HW3::sampleRate()
+int RN52_HardwareSerial3::sampleRate()
 {
   int rate = getAudioRouting() & 0x000F;
   return rate;
@@ -928,7 +936,7 @@ int RN52_HW3::sampleRate()
             2   44K1
             3   48K
 **/
-void RN52_HW3::sampleRate(int rate)
+void RN52_HardwareSerial3::sampleRate(int rate)
 {
   short mask = getAudioRouting() & 0xFFF0;
   short toWrite = mask | rate;
@@ -949,7 +957,7 @@ void RN52_HW3::sampleRate(int rate)
             03  Intercom DAC mode
 
 **/
-int RN52_HW3::A2DPRoute()
+int RN52_HardwareSerial3::A2DPRoute()
 {
   int route = (getAudioRouting() & 0x0F00) >> 8;
   return route; 
@@ -964,7 +972,7 @@ int RN52_HW3::A2DPRoute()
             03  Intercom DAC mode
 
 **/
-void RN52_HW3::A2DPRoute(int route)
+void RN52_HardwareSerial3::A2DPRoute(int route)
 {
   short mask = getAudioRouting() & 0x00FF;
   short toWrite = mask | (route << 8);
@@ -983,7 +991,7 @@ void RN52_HW3::A2DPRoute(int route)
         2   SSP "Just Works"
         4   Pin Code (Legacy)
 **/
-int RN52_HW3::authentication(void) 
+int RN52_HardwareSerial3::authentication(void) 
 {
   while (available() > 0)   //clear buffer
   {
@@ -1009,7 +1017,7 @@ int RN52_HW3::authentication(void)
         2   SSP "Just Works"
         4   Pin Code (Legacy)
 **/
-void RN52_HW3::authentication(int auth)
+void RN52_HardwareSerial3::authentication(int auth)
 {
   print("SA,");
   println(auth);
@@ -1019,7 +1027,7 @@ void RN52_HW3::authentication(int auth)
     Gets the Class of Device
     See AT command guide/https://www.bluetooth.org/apps/content for more info.
 **/
-int RN52_HW3::classOfDevice(void)
+int RN52_HardwareSerial3::classOfDevice(void)
 {
   while (available() > 0)   //clear buffer
   {
@@ -1042,7 +1050,7 @@ int RN52_HW3::classOfDevice(void)
     Sets the Class of Device  
     See AT command guide/https://www.bluetooth.org/apps/content for more info.
 **/
-void RN52_HW3::classOfDevice(int cod)
+void RN52_HardwareSerial3::classOfDevice(int cod)
 {
   print("SC,");
   println(cod);
@@ -1058,7 +1066,7 @@ void RN52_HW3::classOfDevice(int cod)
         3               08      HFP 
         Default is 0xFF
 **/
-void RN52_HW3::discoveryMask(int mask)
+void RN52_HardwareSerial3::discoveryMask(int mask)
 {
     print("SD,"); //send command
     if (mask < 16) print("0");
@@ -1075,7 +1083,7 @@ void RN52_HW3::discoveryMask(int mask)
         3               08          HFP        
         Default is 0xFF
 **/
-int RN52_HW3::discoveryMask(void)
+int RN52_HardwareSerial3::discoveryMask(void)
 {
     while (available() > 0) //clear read buffer
     {
@@ -1111,7 +1119,7 @@ int RN52_HW3::discoveryMask(void)
         3               08      HFP 
         Default is 0xFF
 **/
-void RN52_HW3::connectionMask(int mask)
+void RN52_HardwareSerial3::connectionMask(int mask)
 {
     print("SK,"); //send command
     if (mask < 16) print("0");
@@ -1128,7 +1136,7 @@ void RN52_HW3::connectionMask(int mask)
         3               08          HFP        
         Default is 0xFF
 **/
-int RN52_HW3::connectionMask(void)
+int RN52_HardwareSerial3::connectionMask(void)
 {
     while (available() > 0) //clear read buffer
     {
@@ -1163,7 +1171,7 @@ int RN52_HW3::connectionMask(void)
         Levels from 00 -> 1F
         Default is 0x0909
 **/
-void RN52_HW3::microphoneLevel(int levels)
+void RN52_HardwareSerial3::microphoneLevel(int levels)
 {
     print("SM,0000"); //send command, first 4 digits are reserved
     if (levels < 4096) print("0");
@@ -1181,7 +1189,7 @@ void RN52_HW3::microphoneLevel(int levels)
         Levels from 00 -> 1F
         Default is 0x0909
 **/
-int RN52_HW3::microphoneLevel(void)
+int RN52_HardwareSerial3::microphoneLevel(void)
 {
     while (available() > 0) //clear read buffer
     {
@@ -1213,7 +1221,7 @@ int RN52_HW3::microphoneLevel(void)
         Up to 20 alphanumeric characters
 
 **/
-void RN52_HW3::pincode(String pinCode)
+void RN52_HardwareSerial3::pincode(String pinCode)
 {
     print("SP,"); //send command
     println(pinCode);
@@ -1224,7 +1232,7 @@ void RN52_HW3::pincode(String pinCode)
     Gets the security pin code
         Up to 20 alphanumeric characters
 **/
-String RN52_HW3::pincode(void)
+String RN52_HardwareSerial3::pincode(void)
 {
   while (available() > 0)   //clear buffer
   {
@@ -1246,7 +1254,7 @@ String RN52_HW3::pincode(void)
     Sets the tone level
         Levels from 00 -> 1F
 **/
-void RN52_HW3::toneGain(int gain)
+void RN52_HardwareSerial3::toneGain(int gain)
 {
     print("ST,"); //send command
     if (gain < 16) print("0");
@@ -1258,7 +1266,7 @@ void RN52_HW3::toneGain(int gain)
     Gets the tone level
         Levels from 00 -> 1F
 **/
-int RN52_HW3::toneGain(void)
+int RN52_HardwareSerial3::toneGain(void)
 {
     while (available() > 0) //clear read buffer
     {
@@ -1295,7 +1303,7 @@ int RN52_HW3::toneGain(void)
         06  230400 bps
         07  460800 bps
 **/
-void RN52_HW3::uartBaud(int rate)
+void RN52_HardwareSerial3::uartBaud(int rate)
 {
     print("SU,0"); //send command
     println(rate, HEX);
@@ -1312,7 +1320,7 @@ void RN52_HW3::uartBaud(int rate)
         06  230400 bps
         07  460800 bps
 **/
-int RN52_HW3::uartBaud(void)
+int RN52_HardwareSerial3::uartBaud(void)
 {
     while (available() > 0) //clear read buffer
     {
@@ -1343,7 +1351,7 @@ int RN52_HW3::uartBaud(void)
     Gets the delay between connection tries in milliseconds
     Default 0
 **/
-int RN52_HW3::connDelay(void)
+int RN52_HardwareSerial3::connDelay(void)
 {
   while (available() > 0)   //clear buffer
   {
@@ -1366,7 +1374,7 @@ int RN52_HW3::connDelay(void)
     Sets the delay between connection tries in milliseconds
     Default 0
 **/
-void RN52_HW3::connDelay(int cDelay)
+void RN52_HardwareSerial3::connDelay(int cDelay)
 {
   print("STA,");
   println(cDelay);
@@ -1377,7 +1385,7 @@ void RN52_HW3::connDelay(int cDelay)
     Gets the pairing timeout in seconds.
     Default 0
 **/
-int RN52_HW3::pairingTimeout(void)
+int RN52_HardwareSerial3::pairingTimeout(void)
 {
   while (available() > 0)   //clear buffer
   {
@@ -1400,7 +1408,7 @@ int RN52_HW3::pairingTimeout(void)
     Sets the pairing timeout in seconds.
     Default 0
 **/
-void RN52_HW3::pairingTimeout(int pTimeout)
+void RN52_HardwareSerial3::pairingTimeout(int pTimeout)
 {
   print("STP,");
   println(pTimeout);
@@ -1410,7 +1418,7 @@ void RN52_HW3::pairingTimeout(int pTimeout)
 /** 
     Gets audio gateway's battery level - guessing this is the audio source?
 **/
-String RN52_HW3::getBatteryLevel()
+String RN52_HardwareSerial3::getBatteryLevel()
 {
   while (available() > 0)   //clear buffer
   {
@@ -1438,7 +1446,7 @@ String RN52_HW3::getBatteryLevel()
 /**
     Gets the firmware version of the RN52
 **/
-String RN52_HW3::firmwareV(void)
+String RN52_HardwareSerial3::firmwareV(void)
 {
   while (available() > 0)   //clear buffer
   {
@@ -1459,7 +1467,7 @@ String RN52_HW3::firmwareV(void)
 /**
     Does what it says on the tin - 0 rejects & 1 accepts
 **/
-void RN52_HW3::authAcceptReject(bool action)
+void RN52_HardwareSerial3::authAcceptReject(bool action)
 {
   print("#,");
   println(action);
@@ -1469,7 +1477,7 @@ void RN52_HW3::authAcceptReject(bool action)
 /**
     Put the RN52 module into Device Firmware Upgrade mode - 0 rejects & 1 accepts
 **/
-void RN52_HW3::enterDFU(void)
+void RN52_HardwareSerial3::enterDFU(void)
 {
   println("$");
   delay(50);
@@ -1478,7 +1486,7 @@ void RN52_HW3::enterDFU(void)
 /**
     Redial last dialed number.
 **/
-void RN52_HW3::redailLast(void)
+void RN52_HardwareSerial3::redailLast(void)
 {
   println("AR");
   delay(50);
@@ -1487,7 +1495,7 @@ void RN52_HW3::redailLast(void)
 /**
     Connect to last device
 **/
-void RN52_HW3::reconnectLast(void)
+void RN52_HardwareSerial3::reconnectLast(void)
 {
   println("B");
   delay(50);
@@ -1496,7 +1504,7 @@ void RN52_HW3::reconnectLast(void)
 /**
     Accept incoming call
 **/
-void RN52_HW3::acceptCall(void)
+void RN52_HardwareSerial3::acceptCall(void)
 {
   println("C");
   delay(50);
@@ -1505,7 +1513,7 @@ void RN52_HW3::acceptCall(void)
 /**
     Reject incoming call or terminate call
 **/
-void RN52_HW3::killCall(void)
+void RN52_HardwareSerial3::killCall(void)
 {
   println("E");
   delay(50);
@@ -1514,7 +1522,7 @@ void RN52_HW3::killCall(void)
 /**
     Releases/terminates all held calls or sets user busy for waiting call. 
 **/
-void RN52_HW3::killHeldCalls(void)
+void RN52_HardwareSerial3::killHeldCalls(void)
 {
   println("F");
   delay(50);
@@ -1523,7 +1531,7 @@ void RN52_HW3::killHeldCalls(void)
 /**
     releases/terminates all active calls and accepts other held or waiting calls. 
 **/
-void RN52_HW3::killActiveCalls(void)
+void RN52_HardwareSerial3::killActiveCalls(void)
 {
   println("J");
   delay(50);
@@ -1532,7 +1540,7 @@ void RN52_HW3::killActiveCalls(void)
 /**
     Places all active calls on hold and accepts other held or waiting calls.  
 **/
-void RN52_HW3::holdActiveCalls(void)
+void RN52_HardwareSerial3::holdActiveCalls(void)
 {
   println("L");
   delay(50);
@@ -1541,7 +1549,7 @@ void RN52_HW3::holdActiveCalls(void)
 /**
     Adds a held call to the active conversation.  
 **/
-void RN52_HW3::addActiveCall(void)
+void RN52_HardwareSerial3::addActiveCall(void)
 {
   println("N");
   delay(50);
@@ -1550,7 +1558,7 @@ void RN52_HW3::addActiveCall(void)
 /**
     Connects the two calls and disconnects the subscriber from both calls.   
 **/
-void RN52_HW3::transferActiveCall(void)
+void RN52_HardwareSerial3::transferActiveCall(void)
 {
   println("O");
   delay(50);
@@ -1561,7 +1569,7 @@ void RN52_HW3::transferActiveCall(void)
         0   Transfer to HF
         1   Transfer to AG
 **/
-void RN52_HW3::swapActiveDevice(bool action)
+void RN52_HardwareSerial3::swapActiveDevice(bool action)
 {
   print("X,");
   println(action);
@@ -1571,7 +1579,7 @@ void RN52_HW3::swapActiveDevice(bool action)
 /**
     Activates the voice command application on the media device   
 **/
-void RN52_HW3::activateVCApp(void)
+void RN52_HardwareSerial3::activateVCApp(void)
 {
   println("P");
   delay(50);
@@ -1582,7 +1590,7 @@ void RN52_HW3::activateVCApp(void)
         0   Unmute
         1   Mute
 **/
-void RN52_HW3::muteCall(bool action)
+void RN52_HardwareSerial3::muteCall(bool action)
 {
   print("M,");
   println(action);
@@ -1592,7 +1600,7 @@ void RN52_HW3::muteCall(bool action)
 /**
     Resets and clears all the previously paired devices   
 **/
-void RN52_HW3::wipePairedDevices(void)
+void RN52_HardwareSerial3::wipePairedDevices(void)
 {
   println("U");
   delay(50);
@@ -1601,7 +1609,7 @@ void RN52_HW3::wipePairedDevices(void)
 /**
     Reboot device   
 **/
-void RN52_HW3::rebootDevice(void)
+void RN52_HardwareSerial3::rebootDevice(void)
 {
   println("R,1");
   delay(50);
@@ -1610,7 +1618,7 @@ void RN52_HW3::rebootDevice(void)
 /** 
     Gets the caller ID
 **/
-String RN52_HW3::getCallerID()
+String RN52_HardwareSerial3::getCallerID()
 {
   while (available() > 0)   //clear buffer
   {
@@ -1638,7 +1646,7 @@ String RN52_HW3::getCallerID()
 /** 
     Extracts the caller's name
 **/
-String RN52_HW3::callerName()
+String RN52_HardwareSerial3::callerName()
 {
     return "";
 }
@@ -1646,7 +1654,7 @@ String RN52_HW3::callerName()
 /** 
     Extracts the caller's number
 **/
-String RN52_HW3::callerNumber()
+String RN52_HardwareSerial3::callerNumber()
 {
     return "";
 }
@@ -1659,7 +1667,7 @@ String RN52_HW3::callerNumber()
         2               04      A2DP
         3               08      HFP 
 **/
-void RN52_HW3::killConnection(int connID)
+void RN52_HardwareSerial3::killConnection(int connID)
 {
     print("K,"); //send command
     if (connID < 16) print("0");
@@ -1698,7 +1706,7 @@ void RN52_HW3::killConnection(int connID)
         5       HFP audio microphone level change from audio gateway (phone).
         6-7     Reserved
 **/
-int RN52_HW3::queryState(void)
+int RN52_HardwareSerial3::queryState(void)
 {
   while (available() > 0)   //clear buffer
   {
@@ -1731,7 +1739,7 @@ int RN52_HW3::queryState(void)
         0   Audio volume level
         1   Mic volume level
 **/
-int RN52_HW3::hfpVolumeLevel(bool action) //FIX THIS*****
+int RN52_HardwareSerial3::hfpVolumeLevel(bool action) //FIX THIS*****
 {
   print("Y,");
   println(action);
