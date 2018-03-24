@@ -1,5 +1,4 @@
 #include <RN52_HardwareSerial.h>
-#include <RN52.h>
 //TODO: add tests for the calling functions
 void rebooter(void){  //run this after using a set command
     Serial.println("__Rebooting__\n");
@@ -24,7 +23,7 @@ void setup() {
     //RN52_Serial3 object is instantiated globally in library.
     pinMode(PIN_A0, OUTPUT);
     digitalWrite(PIN_A0, HIGH);
-    Serial.begin(115200);
+    Serial.begin(230400);
     while (!Serial){}
     Serial.println("Ready!");
     RN52_Serial3.begin(115200);
