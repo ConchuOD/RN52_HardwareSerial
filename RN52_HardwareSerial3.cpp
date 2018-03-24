@@ -422,21 +422,21 @@ String RN52_HardwareSerial3::totalCount()
 
 /** 
     Gets the currently active extended features:
-        Bit 0 – Enable AVRCP buttons for EK
-        Bit 1 – Enable reconnect on power-on
-        Bit 2 – Discoverable on start up
-        Bit 3 – Codec indicators PIO7 (AAC) and PIO6 (aptX)
-        Bit 4 – Reboot after disconnect
-        Bit 5 – Mute volume up/down tones
-        Bit 6 – Enable voice command button on PIO4
-        Bit 7 – Disable system tones
-        Bit 8 – Power off after pairing timeout
-        Bit 9 – Reset after power off
-        Bit 10 – Enable list reconnect after panic
-        Bit 11 – Enable latch event indicator PIO2
-        Bit 12 – Enable track change event
-        Bit 13 – Enable tones playback at fixed volume
-        Bit 14 – Enable auto-accept passkey in Keyboard I/O Authentication mode
+        Bit 0 â€“ Enable AVRCP buttons for EK
+        Bit 1 â€“ Enable reconnect on power-on
+        Bit 2 â€“ Discoverable on start up
+        Bit 3 â€“ Codec indicators PIO7 (AAC) and PIO6 (aptX)
+        Bit 4 â€“ Reboot after disconnect
+        Bit 5 â€“ Mute volume up/down tones
+        Bit 6 â€“ Enable voice command button on PIO4
+        Bit 7 â€“ Disable system tones
+        Bit 8 â€“ Power off after pairing timeout
+        Bit 9 â€“ Reset after power off
+        Bit 10 â€“ Enable list reconnect after panic
+        Bit 11 â€“ Enable latch event indicator PIO2
+        Bit 12 â€“ Enable track change event
+        Bit 13 â€“ Enable tones playback at fixed volume
+        Bit 14 â€“ Enable auto-accept passkey in Keyboard I/O Authentication mode
 **/
 short RN52_HardwareSerial3::getExtFeatures()
 {
@@ -476,21 +476,21 @@ short RN52_HardwareSerial3::getExtFeatures()
 
 /** 
     Sets an extended feature:
-        Bit 0 – Enable AVRCP buttons for EK
-        Bit 1 – Enable reconnect on power-on
-        Bit 2 – Discoverable on start up
-        Bit 3 – Codec indicators PIO7 (AAC) and PIO6 (aptX)
-        Bit 4 – Reboot after disconnect
-        Bit 5 – Mute volume up/down tones
-        Bit 6 – Enable voice command button on PIO4
-        Bit 7 – Disable system tones
-        Bit 8 – Power off after pairing timeout
-        Bit 9 – Reset after power off
-        Bit 10 – Enable list reconnect after panic
-        Bit 11 – Enable latch event indicator PIO2
-        Bit 12 – Enable track change event
-        Bit 13 – Enable tones playback at fixed volume
-        Bit 14 – Enable auto-accept passkey in Keyboard I/O Authentication mode
+        Bit 0 â€“ Enable AVRCP buttons for EK
+        Bit 1 â€“ Enable reconnect on power-on
+        Bit 2 â€“ Discoverable on start up
+        Bit 3 â€“ Codec indicators PIO7 (AAC) and PIO6 (aptX)
+        Bit 4 â€“ Reboot after disconnect
+        Bit 5 â€“ Mute volume up/down tones
+        Bit 6 â€“ Enable voice command button on PIO4
+        Bit 7 â€“ Disable system tones
+        Bit 8 â€“ Power off after pairing timeout
+        Bit 9 â€“ Reset after power off
+        Bit 10 â€“ Enable list reconnect after panic
+        Bit 11 â€“ Enable latch event indicator PIO2
+        Bit 12 â€“ Enable track change event
+        Bit 13 â€“ Enable tones playback at fixed volume
+        Bit 14 â€“ Enable auto-accept passkey in Keyboard I/O Authentication mode
 **/
 void RN52_HardwareSerial3::setExtFeatures(bool state, int bit)
 {
@@ -507,21 +507,21 @@ void RN52_HardwareSerial3::setExtFeatures(bool state, int bit)
 
 /** 
     Sets the extended features:
-        Bit 0 – Enable AVRCP buttons for EK
-        Bit 1 – Enable reconnect on power-on
-        Bit 2 – Discoverable on start up
-        Bit 3 – Codec indicators PIO7 (AAC) and PIO6 (aptX)
-        Bit 4 – Reboot after disconnect
-        Bit 5 – Mute volume up/down tones
-        Bit 6 – Enable voice command button on PIO4
-        Bit 7 – Disable system tones
-        Bit 8 – Power off after pairing timeout
-        Bit 9 – Reset after power off
-        Bit 10 – Enable list reconnect after panic
-        Bit 11 – Enable latch event indicator PIO2
-        Bit 12 – Enable track change event
-        Bit 13 – Enable tones playback at fixed volume
-        Bit 14 – Enable auto-accept passkey in Keyboard I/O Authentication mode
+        Bit 0 â€“ Enable AVRCP buttons for EK
+        Bit 1 â€“ Enable reconnect on power-on
+        Bit 2 â€“ Discoverable on start up
+        Bit 3 â€“ Codec indicators PIO7 (AAC) and PIO6 (aptX)
+        Bit 4 â€“ Reboot after disconnect
+        Bit 5 â€“ Mute volume up/down tones
+        Bit 6 â€“ Enable voice command button on PIO4
+        Bit 7 â€“ Disable system tones
+        Bit 8 â€“ Power off after pairing timeout
+        Bit 9 â€“ Reset after power off
+        Bit 10 â€“ Enable list reconnect after panic
+        Bit 11 â€“ Enable latch event indicator PIO2
+        Bit 12 â€“ Enable track change event
+        Bit 13 â€“ Enable tones playback at fixed volume
+        Bit 14 â€“ Enable auto-accept passkey in Keyboard I/O Authentication mode
 **/
 void RN52_HardwareSerial3::setExtFeatures(short settings)
 {
