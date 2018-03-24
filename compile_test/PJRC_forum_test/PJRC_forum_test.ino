@@ -1,4 +1,5 @@
 #include <RN52_HardwareSerial.h>
+#include <RN52.h>
 //TODO: add tests for the calling functions
 void rebooter(void){  //run this after using a set command
     Serial.println("__Rebooting__\n");
@@ -60,16 +61,6 @@ void setup() {
     while(Serial.available() > 0){
           c = Serial.read();
     }
-    RN52_Serial3.println("S%,0001");
-    Serial.println("Doing AVRCP stuff");
-    RN52_Serial3.playPause();
-    delay(2000);
-    RN52_Serial3.playPause();
-    delay(2000);
-    RN52_Serial3.nextTrack();
-    delay(2000);
-    RN52_Serial3.prevTrack();
-    delay(100);
     Serial.println(RN52_Serial3.getMetaData());
         
     //finally reset and reboot
