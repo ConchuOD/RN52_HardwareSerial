@@ -47,6 +47,7 @@
 #include "WString.h"
 #include "util/delay.h"
 #include <Arduino.h>
+#define READDELAY 50
 RN52_HardwareSerial3 RN52_Serial3;
 
 /**
@@ -194,6 +195,7 @@ String RN52_HardwareSerial3::name(void)
   {
     c = read();
     nom += c; //String.h's overloaded + operator adds new character to String?
+    delay(READDELAY);
   }
   return nom;
 }
@@ -1249,6 +1251,7 @@ String RN52_HardwareSerial3::pincode(void)
   {
     c = read();
     pinCode += c; //String.h's overloaded + operator adds new character to String?
+    delay(READDELAY);
   }
   return pinCode;
 }
@@ -1419,9 +1422,9 @@ void RN52_HardwareSerial3::pairingTimeout(int pTimeout)
 }
 
 /** 
-    Gets audio gateway's battery level - guessing this is the audio source?
+    Gets audio gateway's battery level - guessing this is the audio source? 
 **/
-String RN52_HardwareSerial3::getBatteryLevel()
+String RN52_HardwareSerial3::getBatteryLevel() /***************************** THIS DOESNT WORK! ************************/
 {
   while (available() > 0)   //clear buffer
   {
@@ -1464,6 +1467,7 @@ String RN52_HardwareSerial3::firmwareV(void)
   {
     c = read();
     ver += c; //String.h's overloaded + operator adds new character to String?
+    delay(READDELAY);
   }
   return ver;
 }
