@@ -47,7 +47,7 @@
 #include "WString.h"
 #include "util/delay.h"
 #include <Arduino.h>
-#define READDELAY 50
+#define READDELAY 1
 RN52_HardwareSerial3 RN52_Serial3;
 
 /**
