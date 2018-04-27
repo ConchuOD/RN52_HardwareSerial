@@ -308,7 +308,7 @@ String RN52_HardwareSerial3::getMetaData()
   println("AD");
   while (available() == 0);
   String metaData;
-  int i = 6;
+  int i = 7;
   long count = 0;
   while (i != 0) //loop six times for six lines of data
   {
@@ -409,9 +409,19 @@ int RN52_HardwareSerial3::trackNumber()
 /** 
     Extracts the track duration from the metadata
 **/
-String RN52_HardwareSerial3::trackDuration()
+int RN52_HardwareSerial3::trackDuration()
 {
-    return 0;
+  int trackLength;
+  String metaData = getMetaData();
+  int n = metaData.indexOf("Time(ms)=") + 9;
+  if (n != -1) {
+    metaData.remove(0, n);
+    n = metaData.indexOf('\n');
+    metaData.remove(n);
+    trackLength = metaData.toInt();
+  }
+  else return 0;
+  return trackLength;
 }
 
 /** 

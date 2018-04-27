@@ -318,7 +318,7 @@ public:
     String genre();
     int trackNumber();
     String totalCount();
-    String trackDuration();
+    int trackDuration();
     short getExtFeatures();
     void setExtFeatures(bool state, int bit);
     void setExtFeatures(short settings);
@@ -477,7 +477,7 @@ public:
     String genre();
     int trackNumber();
     String totalCount();
-    String trackDuration();
+    int trackDuration();
     short getExtFeatures();
     void setExtFeatures(bool state, int bit);
     void setExtFeatures(short settings);
