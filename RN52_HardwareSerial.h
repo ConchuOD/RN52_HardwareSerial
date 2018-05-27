@@ -258,6 +258,12 @@ void serial6_clear(void);
 class RN52_HardwareSerial : public Stream
 {
 private:
+    String current_title;
+    String current_artist;
+    String current_album;
+    String current_genre;
+    int current_track_number;
+    int current_track_duration;
     static short IOMask;
     static short IOProtect;
     static short IOStateMask;
@@ -311,7 +317,7 @@ public:
     void playPause();
     void nextTrack();
     void prevTrack();
-    String getMetaData();
+    void getMetaData();
     String trackTitle();
     String album();
     String artist();
@@ -416,6 +422,12 @@ extern void serialEvent(void);
 class RN52_HardwareSerial3 : public RN52_HardwareSerial
 {
 private:
+    String current_title;
+    String current_artist;
+    String current_album;
+    String current_genre;
+    int current_track_number;
+    int current_track_duration; 
     static short IOMask;
     static short IOProtect;
     static short IOStateMask;
@@ -470,7 +482,7 @@ public:
     void playPause();
     void nextTrack();
     void prevTrack();
-    String getMetaData();
+    void getMetaData();
     String trackTitle();
     String album();
     String artist();

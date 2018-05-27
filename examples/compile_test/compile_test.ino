@@ -131,7 +131,7 @@ void setup() {
     delay(2000);
     RN52_Serial3.prevTrack();
     delay(100);
-    Serial.println(RN52_Serial3.getMetaData());
+    RN52_Serial3.getMetaData();
     Serial.println(RN52_Serial3.trackTitle());
     Serial.println(RN52_Serial3.album());
     Serial.println(RN52_Serial3.artist());
