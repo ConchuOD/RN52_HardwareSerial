@@ -258,12 +258,12 @@ void serial6_clear(void);
 class RN52_HardwareSerial : public Stream
 {
 private:
-    String current_title;
-    String current_artist;
-    String current_album;
-    String current_genre;
-    int current_track_number;
-    int current_track_duration;
+    static String current_title;
+    static String current_artist;
+    static String current_album;
+    static String current_genre;
+    static int current_track_number;
+    static int current_track_duration;
     static short IOMask;
     static short IOProtect;
     static short IOStateMask;
@@ -422,12 +422,12 @@ extern void serialEvent(void);
 class RN52_HardwareSerial3 : public RN52_HardwareSerial
 {
 private:
-    String current_title;
-    String current_artist;
-    String current_album;
-    String current_genre;
-    int current_track_number;
-    int current_track_duration; 
+    static String current_title;
+    static String current_artist;
+    static String current_album;
+    static String current_genre;
+    static int current_track_number;
+    static int current_track_duration;
     static short IOMask;
     static short IOProtect;
     static short IOStateMask;
@@ -435,7 +435,7 @@ private:
     static short IO;
     static short IOState;
 public:
-    constexpr RN52_HardwareSerial3() {}
+    RN52_HardwareSerial3(){}
     virtual void begin(uint32_t baud) { serial3_begin(BAUD2DIV3(baud)); }
     virtual void begin(uint32_t baud, uint32_t format) {
                       serial3_begin(BAUD2DIV3(baud));

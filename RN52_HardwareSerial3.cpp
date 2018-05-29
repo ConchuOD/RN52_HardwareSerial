@@ -63,12 +63,13 @@ short RN52_HardwareSerial3::IOState;
 /**
     my variables
 **/
-    String current_title = "n/a";
-    String current_artist = "n/a";
-    String current_album = "n/a";
-    String current_genre = "n/a";
-    int current_track_number = 0;
-    int current_track_duration = 0;
+String RN52_HardwareSerial3::current_title = "n/a";
+String RN52_HardwareSerial3::current_artist = "n/a";
+String RN52_HardwareSerial3::current_album = "n/a";
+String RN52_HardwareSerial3::current_genre = "n/a";
+int RN52_HardwareSerial3::current_track_number = 0;
+int RN52_HardwareSerial3::current_track_duration = 0;
+
 
 /**
     Two gifts from Paul
@@ -331,43 +332,43 @@ void RN52_HardwareSerial3::getMetaData()
     }
     if ((millis() - count) > 500) i--;  //timeout
   }
-  int sub_start = metaData.indexOf("Title=") + 6;
+  String tempString;
+  int sub_start = -1,sub_end = -1;
+  sub_start = metaData.indexOf("Title=") + 6;
   if (sub_start != -1) {    //removes everything in metadata String before title & everything after newline char
     sub_end = metaData.indexOf('\n',sub_start);
-    strcpy(metaData.substring(sub_start,sub_end),current_title);
+    current_title = metaData.substring(sub_start,sub_end);
   }
   else current_title = "n/a";
-  int sub_start = metaData.indexOf("Album=") + 6;
+  sub_start = metaData.indexOf("Album=") + 6;
   if (sub_start != -1) {    //removes everything in metadata String before title & everything after newline char
     sub_end = metaData.indexOf('\n',sub_start);
-    strcpy(metaData.substring(sub_start,sub_end),current_album);
+    current_album = metaData.substring(sub_start,sub_end);
   }
   else current_album = "n/a";
-  int sub_start = metaData.indexOf("Artist=") + 7;
+  sub_start = metaData.indexOf("Artist=") + 7;
   if (sub_start != -1) {    //removes everything in metadata String before title & everything after newline char
     sub_end = metaData.indexOf('\n',sub_start);
-    strcpy(metaData.substring(sub_start,sub_end),current_artist);
+    current_artist = metaData.substring(sub_start,sub_end);
   }
   else current_artist = "n/a";
-  int sub_start = metaData.indexOf("Genre=") + 6;
+  sub_start = metaData.indexOf("Genre=") + 6;
   if (sub_start != -1) {    //removes everything in metadata String before title & everything after newline char
     sub_end = metaData.indexOf('\n',sub_start);
-    strcpy(metaData.substring(sub_start,sub_end),current_genre);
+    current_genre = metaData.substring(sub_start,sub_end);
   }
   else current_genre = "n/a";
-  int sub_start = metaData.indexOf("TrackNumber=") + 12;
+  sub_start = metaData.indexOf("TrackNumber=") + 12;
   if (sub_start != -1) {    //removes everything in metadata String before title & everything after newline char
     sub_end = metaData.indexOf('\n',sub_start);
-    String tempString;
-    strcpy(metaData.substring(sub_start,sub_end),tempString);
+    tempString = metaData.substring(sub_start,sub_end);
     current_track_number = tempString.toInt();
   }
   else current_track_number = 0;
-  int sub_start = metaData.indexOf("Time(ms)=") + 9;
+  sub_start = metaData.indexOf("Time(ms)=") + 9;
   if (sub_start != -1) {    //removes everything in metadata String before title & everything after newline char
     sub_end = metaData.indexOf('\n',sub_start);
-    String tempString;
-    strcpy(metaData.substring(sub_start,sub_end),tempString);
+    tempString = metaData.substring(sub_start,sub_end);
     current_track_duration = tempString.toInt();
   }
   else current_track_duration = 0;
@@ -379,7 +380,7 @@ void RN52_HardwareSerial3::getMetaData()
 **/
 String RN52_HardwareSerial3::trackTitle()
 {
-    return currentTitle;
+    return current_title;
 }
 
 /** 
@@ -387,7 +388,7 @@ String RN52_HardwareSerial3::trackTitle()
 **/
 String RN52_HardwareSerial3::album()
 {
-    return currentAlbum;
+    return current_album;
 }
 
 /** 
@@ -395,7 +396,7 @@ String RN52_HardwareSerial3::album()
 **/
 String RN52_HardwareSerial3::artist()
 {
-    return currentArtist;
+    return current_artist;
 }
 
 /** 
@@ -403,7 +404,7 @@ String RN52_HardwareSerial3::artist()
 **/
 String RN52_HardwareSerial3::genre()
 {
-    return currentGenre;
+    return current_genre;
 }
 
 /** 
@@ -411,7 +412,7 @@ String RN52_HardwareSerial3::genre()
 **/
 int RN52_HardwareSerial3::trackNumber()
 {
-    return currentTrackNumber;
+    return current_track_number;
 }
 
 /** 
@@ -419,7 +420,7 @@ int RN52_HardwareSerial3::trackNumber()
 **/
 int RN52_HardwareSerial3::trackDuration()
 {
-    return currentTrackDuration
+    return current_track_duration;
 }
 
 /** 
