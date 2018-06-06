@@ -749,7 +749,6 @@ public:
 extern RN52_HardwareSerial3 RN52_Serial3;
 extern void serialEvent3(void);
 
-#ifdef HAS_KINETISK_UART3
 class RN52_HardwareSerial4 : public RN52_HardwareSerial
 {
 private:
@@ -914,9 +913,7 @@ public:
 };
 extern RN52_HardwareSerial4 RN52_Serial4;
 extern void serialEvent4(void);
-#endif
 
-#ifdef HAS_KINETISK_UART4
 class RN52_HardwareSerial5 : public RN52_HardwareSerial
 {
 private:
@@ -1081,9 +1078,8 @@ public:
 };
 extern RN52_HardwareSerial5 RN52_Serial5;
 extern void serialEvent5(void);
-#endif
 
-#ifdef HAS_KINETISK_UART5
+
 class RN52_HardwareSerial6 : public RN52_HardwareSerial
 {
 private:
@@ -1248,7 +1244,6 @@ public:
 };
 extern RN52_HardwareSerial6 RN52_Serial6;
 extern void serialEvent5(void);
-#endif
 
 #endif
 #endif
