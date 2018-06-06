@@ -416,8 +416,173 @@ public:
     void rebootDevice(void); 
     void wipePairedDevices(void);
 };
-extern RN52_HardwareSerial RN52_Serial;
+extern RN52_HardwareSerial RN52_Serial1;
 extern void serialEvent(void);
+
+class RN52_HardwareSerial2 : public RN52_HardwareSerial
+{
+private:
+    static String current_title;
+    static String current_artist;
+    static String current_album;
+    static String current_genre;
+    static int current_track_number;
+    static int current_track_duration;
+    static short IOMask;
+    static short IOProtect;
+    static short IOStateMask;
+    static short IOStateProtect;
+    static short IO;
+    static short IOState;
+public:
+    RN52_HardwareSerial2(){}
+    virtual void begin(uint32_t baud) { serial2_begin(BAUD2DIV3(baud)); }
+    virtual void begin(uint32_t baud, uint32_t format) {
+                      serial2_begin(BAUD2DIV3(baud));
+                      serial2_format(format); }
+    virtual void end(void)          { serial2_end(); }
+    virtual void transmitterEnable(uint8_t pin) { serial2_set_transmit_pin(pin); }
+    virtual void setRX(uint8_t pin) { serial2_set_rx(pin); }
+    virtual void setTX(uint8_t pin, bool opendrain=false) { serial2_set_tx(pin, opendrain); }
+    virtual bool attachRts(uint8_t pin) { return serial2_set_rts(pin); }
+    virtual bool attachCts(uint8_t pin) { return serial2_set_cts(pin); }
+    virtual int available(void)     { return serial2_available(); }
+    virtual int peek(void)          { return serial2_peek(); }
+    virtual int read(void)          { return serial2_getchar(); }
+    virtual void flush(void)        { serial2_flush(); }
+    virtual void clear(void)    { serial2_clear(); }
+    virtual int availableForWrite(void) { return serial2_write_buffer_free(); }
+    using Print::write;
+    virtual size_t write(uint8_t c) { serial2_putchar(c); return 1; }
+    virtual size_t write(unsigned long n)   { return write((uint8_t)n); }
+    virtual size_t write(long n)            { return write((uint8_t)n); }
+    virtual size_t write(unsigned int n)    { return write((uint8_t)n); }
+    virtual size_t write(int n)             { return write((uint8_t)n); }
+    virtual size_t write(const uint8_t *buffer, size_t size)
+                    { serial2_write(buffer, size); return size; }
+        virtual size_t write(const char *str)   { size_t len = strlen(str);
+                      serial2_write((const uint8_t *)str, len);
+                      return len; }
+    virtual size_t write9bit(uint32_t c)    { serial2_putchar(c); return 1; }
+    operator bool()         { return true; }
+    static inline void handle_interrupt() __attribute__((__always_inline__));
+    bool GPIOPinMode(int pin, bool state);
+    void GPIODigitalWrite(int pin, bool state);
+    bool GPIODigitalRead(int pin);
+    void setDiscoverability(bool discoverable);
+    void toggleEcho();
+    void name(String nom, bool normalized);
+    String name(void);
+    void factoryReset();
+    int idlePowerDownTime(void);
+    void idlePowerDownTime(int timer);
+    void reboot();
+    void call(String number);
+    void endCall();
+    void playPause();
+    void nextTrack();
+    void prevTrack();
+    void getMetaData();
+    String trackTitle();
+    String album();
+    String artist();
+    String genre();
+    int trackNumber();
+    String totalCount();
+    int trackDuration();
+    short getExtFeatures();
+    void setExtFeatures(bool state, int bit);
+    void setExtFeatures(short settings);
+    bool AVRCPButtons();
+    void AVRCPButtons(bool state);
+    bool powerUpReconnect();
+    void powerUpReconnect(bool state);
+    bool startUpDiscoverable();
+    void startUpDiscoverable(bool state);
+    bool rebootOnDisconnect();
+    void rebootOnDisconnect(bool state);
+    bool volumeToneMute();
+    void volumeToneMute(bool state);
+    bool systemTonesDisabled();
+    void systemTonesDisabled(bool state);
+    bool powerDownAfterPairingTimeout();
+    void powerDownAfterPairingTimeout(bool state);
+    bool resetAfterPowerDown();
+    void resetAfterPowerDown(bool state);
+    bool reconnectAfterPanic();
+    void reconnectAfterPanic(bool state);
+    bool trackChangeEvent();
+    void trackChangeEvent(bool state);
+    bool tonesAtFixedVolume();
+    void tonesAtFixedVolume(bool state);
+    bool autoAcceptPasskey();
+    void autoAcceptPasskey(bool state);
+    bool codecIndicators();
+    void codecIndicators(bool state);
+    bool voiceCommandButton();
+    void voiceCommandButton(bool state);
+    bool latchEventIndicator();
+    void latchEventIndicator(bool state);
+    int volumeOnStartup();
+    void volumeOnStartup(int vol);
+    void volumeUp();
+    void volumeDown();
+    short getAudioRouting();
+    int sampleWidth();
+    void sampleWidth(int width);
+    int sampleRate();
+    void sampleRate(int rate);
+    int A2DPRoute();
+    void A2DPRoute(int route);
+    //New AT commands
+    void authentication(int auth);
+    int authentication(void);
+    void classOfDevice(int cod);
+    int classOfDevice(void);
+    void discoveryMask(int mask);
+    int discoveryMask(void);
+    void connectionMask(int mask);
+    int connectionMask(void);
+    void microphoneLevel(int levels);
+    int microphoneLevel(void);
+    void pincode(String pinCode);
+    String pincode(void);
+    void toneGain(int gain);
+    int toneGain(void);
+    void connDelay(int cDelay);
+    int connDelay(void);
+    int pairingTimeout(void);
+    void pairingTimeout(int pTimeout);
+    String getBatteryLevel();
+    void uartBaud(int rate);
+    int uartBaud(void);
+    String firmwareV(void);
+    //H - Just read the AT guide.. http://ww1.microchip.com/downloads/en/DeviceDoc/50002154A.pdf
+    void authAcceptReject(bool action);
+    void enterDFU(void);
+    void redailLast(void);
+    void reconnectLast(void);
+    void acceptCall(void);
+    void killCall(void);
+    void killHeldCalls(void);
+    void killActiveCalls(void);
+    void holdActiveCalls(void);
+    void addActiveCall(void);
+    void transferActiveCall(void);
+    void swapActiveDevice(bool action); 
+    void activateVCApp(void);
+    void killConnection(int connID);
+    void muteCall(bool action); 
+    int queryState(void);
+    int hfpVolumeLevel(bool action);
+    String getCallerID(void);
+    String callerName(void);
+    String callerNumber(void);
+    void rebootDevice(void); 
+    void wipePairedDevices(void);
+};
+extern RN52_HardwareSerial2 RN52_Serial2;
+extern void serialEvent2(void);
 
 class RN52_HardwareSerial3 : public RN52_HardwareSerial
 {
@@ -584,6 +749,506 @@ public:
 extern RN52_HardwareSerial3 RN52_Serial3;
 extern void serialEvent3(void);
 
+#ifdef HAS_KINETISK_UART3
+class RN52_HardwareSerial4 : public RN52_HardwareSerial
+{
+private:
+    static String current_title;
+    static String current_artist;
+    static String current_album;
+    static String current_genre;
+    static int current_track_number;
+    static int current_track_duration;
+    static short IOMask;
+    static short IOProtect;
+    static short IOStateMask;
+    static short IOStateProtect;
+    static short IO;
+    static short IOState;
+public:
+    RN52_HardwareSerial4(){}
+    virtual void begin(uint32_t baud) { serial4_begin(BAUD2DIV3(baud)); }
+    virtual void begin(uint32_t baud, uint32_t format) {
+                      serial4_begin(BAUD2DIV3(baud));
+                      serial4_format(format); }
+    virtual void end(void)          { serial4_end(); }
+    virtual void transmitterEnable(uint8_t pin) { serial4_set_transmit_pin(pin); }
+    virtual void setRX(uint8_t pin) { serial4_set_rx(pin); }
+    virtual void setTX(uint8_t pin, bool opendrain=false) { serial4_set_tx(pin, opendrain); }
+    virtual bool attachRts(uint8_t pin) { return serial4_set_rts(pin); }
+    virtual bool attachCts(uint8_t pin) { return serial4_set_cts(pin); }
+    virtual int available(void)     { return serial4_available(); }
+    virtual int peek(void)          { return serial4_peek(); }
+    virtual int read(void)          { return serial4_getchar(); }
+    virtual void flush(void)        { serial4_flush(); }
+    virtual void clear(void)    { serial4_clear(); }
+    virtual int availableForWrite(void) { return serial4_write_buffer_free(); }
+    using Print::write;
+    virtual size_t write(uint8_t c) { serial4_putchar(c); return 1; }
+    virtual size_t write(unsigned long n)   { return write((uint8_t)n); }
+    virtual size_t write(long n)            { return write((uint8_t)n); }
+    virtual size_t write(unsigned int n)    { return write((uint8_t)n); }
+    virtual size_t write(int n)             { return write((uint8_t)n); }
+    virtual size_t write(const uint8_t *buffer, size_t size)
+                    { serial4_write(buffer, size); return size; }
+        virtual size_t write(const char *str)   { size_t len = strlen(str);
+                      serial4_write((const uint8_t *)str, len);
+                      return len; }
+    virtual size_t write9bit(uint32_t c)    { serial4_putchar(c); return 1; }
+    operator bool()         { return true; }
+    static inline void handle_interrupt() __attribute__((__always_inline__));
+    bool GPIOPinMode(int pin, bool state);
+    void GPIODigitalWrite(int pin, bool state);
+    bool GPIODigitalRead(int pin);
+    void setDiscoverability(bool discoverable);
+    void toggleEcho();
+    void name(String nom, bool normalized);
+    String name(void);
+    void factoryReset();
+    int idlePowerDownTime(void);
+    void idlePowerDownTime(int timer);
+    void reboot();
+    void call(String number);
+    void endCall();
+    void playPause();
+    void nextTrack();
+    void prevTrack();
+    void getMetaData();
+    String trackTitle();
+    String album();
+    String artist();
+    String genre();
+    int trackNumber();
+    String totalCount();
+    int trackDuration();
+    short getExtFeatures();
+    void setExtFeatures(bool state, int bit);
+    void setExtFeatures(short settings);
+    bool AVRCPButtons();
+    void AVRCPButtons(bool state);
+    bool powerUpReconnect();
+    void powerUpReconnect(bool state);
+    bool startUpDiscoverable();
+    void startUpDiscoverable(bool state);
+    bool rebootOnDisconnect();
+    void rebootOnDisconnect(bool state);
+    bool volumeToneMute();
+    void volumeToneMute(bool state);
+    bool systemTonesDisabled();
+    void systemTonesDisabled(bool state);
+    bool powerDownAfterPairingTimeout();
+    void powerDownAfterPairingTimeout(bool state);
+    bool resetAfterPowerDown();
+    void resetAfterPowerDown(bool state);
+    bool reconnectAfterPanic();
+    void reconnectAfterPanic(bool state);
+    bool trackChangeEvent();
+    void trackChangeEvent(bool state);
+    bool tonesAtFixedVolume();
+    void tonesAtFixedVolume(bool state);
+    bool autoAcceptPasskey();
+    void autoAcceptPasskey(bool state);
+    bool codecIndicators();
+    void codecIndicators(bool state);
+    bool voiceCommandButton();
+    void voiceCommandButton(bool state);
+    bool latchEventIndicator();
+    void latchEventIndicator(bool state);
+    int volumeOnStartup();
+    void volumeOnStartup(int vol);
+    void volumeUp();
+    void volumeDown();
+    short getAudioRouting();
+    int sampleWidth();
+    void sampleWidth(int width);
+    int sampleRate();
+    void sampleRate(int rate);
+    int A2DPRoute();
+    void A2DPRoute(int route);
+    //New AT commands
+    void authentication(int auth);
+    int authentication(void);
+    void classOfDevice(int cod);
+    int classOfDevice(void);
+    void discoveryMask(int mask);
+    int discoveryMask(void);
+    void connectionMask(int mask);
+    int connectionMask(void);
+    void microphoneLevel(int levels);
+    int microphoneLevel(void);
+    void pincode(String pinCode);
+    String pincode(void);
+    void toneGain(int gain);
+    int toneGain(void);
+    void connDelay(int cDelay);
+    int connDelay(void);
+    int pairingTimeout(void);
+    void pairingTimeout(int pTimeout);
+    String getBatteryLevel();
+    void uartBaud(int rate);
+    int uartBaud(void);
+    String firmwareV(void);
+    //H - Just read the AT guide.. http://ww1.microchip.com/downloads/en/DeviceDoc/50002154A.pdf
+    void authAcceptReject(bool action);
+    void enterDFU(void);
+    void redailLast(void);
+    void reconnectLast(void);
+    void acceptCall(void);
+    void killCall(void);
+    void killHeldCalls(void);
+    void killActiveCalls(void);
+    void holdActiveCalls(void);
+    void addActiveCall(void);
+    void transferActiveCall(void);
+    void swapActiveDevice(bool action); 
+    void activateVCApp(void);
+    void killConnection(int connID);
+    void muteCall(bool action); 
+    int queryState(void);
+    int hfpVolumeLevel(bool action);
+    String getCallerID(void);
+    String callerName(void);
+    String callerNumber(void);
+    void rebootDevice(void); 
+    void wipePairedDevices(void);
+};
+extern RN52_HardwareSerial4 RN52_Serial4;
+extern void serialEvent4(void);
+#endif
+
+#ifdef HAS_KINETISK_UART4
+class RN52_HardwareSerial5 : public RN52_HardwareSerial
+{
+private:
+    static String current_title;
+    static String current_artist;
+    static String current_album;
+    static String current_genre;
+    static int current_track_number;
+    static int current_track_duration;
+    static short IOMask;
+    static short IOProtect;
+    static short IOStateMask;
+    static short IOStateProtect;
+    static short IO;
+    static short IOState;
+public:
+    RN52_HardwareSerial5(){}
+    virtual void begin(uint32_t baud) { serial5_begin(BAUD2DIV3(baud)); }
+    virtual void begin(uint32_t baud, uint32_t format) {
+                      serial5_begin(BAUD2DIV3(baud));
+                      serial5_format(format); }
+    virtual void end(void)          { serial5_end(); }
+    virtual void transmitterEnable(uint8_t pin) { serial5_set_transmit_pin(pin); }
+    virtual void setRX(uint8_t pin) { serial5_set_rx(pin); }
+    virtual void setTX(uint8_t pin, bool opendrain=false) { serial5_set_tx(pin, opendrain); }
+    virtual bool attachRts(uint8_t pin) { return serial5_set_rts(pin); }
+    virtual bool attachCts(uint8_t pin) { return serial5_set_cts(pin); }
+    virtual int available(void)     { return serial5_available(); }
+    virtual int peek(void)          { return serial5_peek(); }
+    virtual int read(void)          { return serial5_getchar(); }
+    virtual void flush(void)        { serial5_flush(); }
+    virtual void clear(void)    { serial5_clear(); }
+    virtual int availableForWrite(void) { return serial5_write_buffer_free(); }
+    using Print::write;
+    virtual size_t write(uint8_t c) { serial5_putchar(c); return 1; }
+    virtual size_t write(unsigned long n)   { return write((uint8_t)n); }
+    virtual size_t write(long n)            { return write((uint8_t)n); }
+    virtual size_t write(unsigned int n)    { return write((uint8_t)n); }
+    virtual size_t write(int n)             { return write((uint8_t)n); }
+    virtual size_t write(const uint8_t *buffer, size_t size)
+                    { serial5_write(buffer, size); return size; }
+        virtual size_t write(const char *str)   { size_t len = strlen(str);
+                      serial5_write((const uint8_t *)str, len);
+                      return len; }
+    virtual size_t write9bit(uint32_t c)    { serial5_putchar(c); return 1; }
+    operator bool()         { return true; }
+    static inline void handle_interrupt() __attribute__((__always_inline__));
+    bool GPIOPinMode(int pin, bool state);
+    void GPIODigitalWrite(int pin, bool state);
+    bool GPIODigitalRead(int pin);
+    void setDiscoverability(bool discoverable);
+    void toggleEcho();
+    void name(String nom, bool normalized);
+    String name(void);
+    void factoryReset();
+    int idlePowerDownTime(void);
+    void idlePowerDownTime(int timer);
+    void reboot();
+    void call(String number);
+    void endCall();
+    void playPause();
+    void nextTrack();
+    void prevTrack();
+    void getMetaData();
+    String trackTitle();
+    String album();
+    String artist();
+    String genre();
+    int trackNumber();
+    String totalCount();
+    int trackDuration();
+    short getExtFeatures();
+    void setExtFeatures(bool state, int bit);
+    void setExtFeatures(short settings);
+    bool AVRCPButtons();
+    void AVRCPButtons(bool state);
+    bool powerUpReconnect();
+    void powerUpReconnect(bool state);
+    bool startUpDiscoverable();
+    void startUpDiscoverable(bool state);
+    bool rebootOnDisconnect();
+    void rebootOnDisconnect(bool state);
+    bool volumeToneMute();
+    void volumeToneMute(bool state);
+    bool systemTonesDisabled();
+    void systemTonesDisabled(bool state);
+    bool powerDownAfterPairingTimeout();
+    void powerDownAfterPairingTimeout(bool state);
+    bool resetAfterPowerDown();
+    void resetAfterPowerDown(bool state);
+    bool reconnectAfterPanic();
+    void reconnectAfterPanic(bool state);
+    bool trackChangeEvent();
+    void trackChangeEvent(bool state);
+    bool tonesAtFixedVolume();
+    void tonesAtFixedVolume(bool state);
+    bool autoAcceptPasskey();
+    void autoAcceptPasskey(bool state);
+    bool codecIndicators();
+    void codecIndicators(bool state);
+    bool voiceCommandButton();
+    void voiceCommandButton(bool state);
+    bool latchEventIndicator();
+    void latchEventIndicator(bool state);
+    int volumeOnStartup();
+    void volumeOnStartup(int vol);
+    void volumeUp();
+    void volumeDown();
+    short getAudioRouting();
+    int sampleWidth();
+    void sampleWidth(int width);
+    int sampleRate();
+    void sampleRate(int rate);
+    int A2DPRoute();
+    void A2DPRoute(int route);
+    //New AT commands
+    void authentication(int auth);
+    int authentication(void);
+    void classOfDevice(int cod);
+    int classOfDevice(void);
+    void discoveryMask(int mask);
+    int discoveryMask(void);
+    void connectionMask(int mask);
+    int connectionMask(void);
+    void microphoneLevel(int levels);
+    int microphoneLevel(void);
+    void pincode(String pinCode);
+    String pincode(void);
+    void toneGain(int gain);
+    int toneGain(void);
+    void connDelay(int cDelay);
+    int connDelay(void);
+    int pairingTimeout(void);
+    void pairingTimeout(int pTimeout);
+    String getBatteryLevel();
+    void uartBaud(int rate);
+    int uartBaud(void);
+    String firmwareV(void);
+    //H - Just read the AT guide.. http://ww1.microchip.com/downloads/en/DeviceDoc/50002154A.pdf
+    void authAcceptReject(bool action);
+    void enterDFU(void);
+    void redailLast(void);
+    void reconnectLast(void);
+    void acceptCall(void);
+    void killCall(void);
+    void killHeldCalls(void);
+    void killActiveCalls(void);
+    void holdActiveCalls(void);
+    void addActiveCall(void);
+    void transferActiveCall(void);
+    void swapActiveDevice(bool action); 
+    void activateVCApp(void);
+    void killConnection(int connID);
+    void muteCall(bool action); 
+    int queryState(void);
+    int hfpVolumeLevel(bool action);
+    String getCallerID(void);
+    String callerName(void);
+    String callerNumber(void);
+    void rebootDevice(void); 
+    void wipePairedDevices(void);
+};
+extern RN52_HardwareSerial5 RN52_Serial5;
+extern void serialEvent5(void);
+#endif
+
+#ifdef HAS_KINETISK_UART5
+class RN52_HardwareSerial6 : public RN52_HardwareSerial
+{
+private:
+    static String current_title;
+    static String current_artist;
+    static String current_album;
+    static String current_genre;
+    static int current_track_number;
+    static int current_track_duration;
+    static short IOMask;
+    static short IOProtect;
+    static short IOStateMask;
+    static short IOStateProtect;
+    static short IO;
+    static short IOState;
+public:
+    RN52_HardwareSerial6(){}
+    virtual void begin(uint32_t baud) { serial6_begin(BAUD2DIV3(baud)); }
+    virtual void begin(uint32_t baud, uint32_t format) {
+                      serial6_begin(BAUD2DIV3(baud));
+                      serial6_format(format); }
+    virtual void end(void)          { serial6_end(); }
+    virtual void transmitterEnable(uint8_t pin) { serial6_set_transmit_pin(pin); }
+    virtual void setRX(uint8_t pin) { serial6_set_rx(pin); }
+    virtual void setTX(uint8_t pin, bool opendrain=false) { serial6_set_tx(pin, opendrain); }
+    virtual bool attachRts(uint8_t pin) { return serial6_set_rts(pin); }
+    virtual bool attachCts(uint8_t pin) { return serial6_set_cts(pin); }
+    virtual int available(void)     { return serial6_available(); }
+    virtual int peek(void)          { return serial6_peek(); }
+    virtual int read(void)          { return serial6_getchar(); }
+    virtual void flush(void)        { serial6_flush(); }
+    virtual void clear(void)    { serial6_clear(); }
+    virtual int availableForWrite(void) { return serial6_write_buffer_free(); }
+    using Print::write;
+    virtual size_t write(uint8_t c) { serial6_putchar(c); return 1; }
+    virtual size_t write(unsigned long n)   { return write((uint8_t)n); }
+    virtual size_t write(long n)            { return write((uint8_t)n); }
+    virtual size_t write(unsigned int n)    { return write((uint8_t)n); }
+    virtual size_t write(int n)             { return write((uint8_t)n); }
+    virtual size_t write(const uint8_t *buffer, size_t size)
+                    { serial6_write(buffer, size); return size; }
+        virtual size_t write(const char *str)   { size_t len = strlen(str);
+                      serial6_write((const uint8_t *)str, len);
+                      return len; }
+    virtual size_t write9bit(uint32_t c)    { serial6_putchar(c); return 1; }
+    operator bool()         { return true; }
+    static inline void handle_interrupt() __attribute__((__always_inline__));
+    bool GPIOPinMode(int pin, bool state);
+    void GPIODigitalWrite(int pin, bool state);
+    bool GPIODigitalRead(int pin);
+    void setDiscoverability(bool discoverable);
+    void toggleEcho();
+    void name(String nom, bool normalized);
+    String name(void);
+    void factoryReset();
+    int idlePowerDownTime(void);
+    void idlePowerDownTime(int timer);
+    void reboot();
+    void call(String number);
+    void endCall();
+    void playPause();
+    void nextTrack();
+    void prevTrack();
+    void getMetaData();
+    String trackTitle();
+    String album();
+    String artist();
+    String genre();
+    int trackNumber();
+    String totalCount();
+    int trackDuration();
+    short getExtFeatures();
+    void setExtFeatures(bool state, int bit);
+    void setExtFeatures(short settings);
+    bool AVRCPButtons();
+    void AVRCPButtons(bool state);
+    bool powerUpReconnect();
+    void powerUpReconnect(bool state);
+    bool startUpDiscoverable();
+    void startUpDiscoverable(bool state);
+    bool rebootOnDisconnect();
+    void rebootOnDisconnect(bool state);
+    bool volumeToneMute();
+    void volumeToneMute(bool state);
+    bool systemTonesDisabled();
+    void systemTonesDisabled(bool state);
+    bool powerDownAfterPairingTimeout();
+    void powerDownAfterPairingTimeout(bool state);
+    bool resetAfterPowerDown();
+    void resetAfterPowerDown(bool state);
+    bool reconnectAfterPanic();
+    void reconnectAfterPanic(bool state);
+    bool trackChangeEvent();
+    void trackChangeEvent(bool state);
+    bool tonesAtFixedVolume();
+    void tonesAtFixedVolume(bool state);
+    bool autoAcceptPasskey();
+    void autoAcceptPasskey(bool state);
+    bool codecIndicators();
+    void codecIndicators(bool state);
+    bool voiceCommandButton();
+    void voiceCommandButton(bool state);
+    bool latchEventIndicator();
+    void latchEventIndicator(bool state);
+    int volumeOnStartup();
+    void volumeOnStartup(int vol);
+    void volumeUp();
+    void volumeDown();
+    short getAudioRouting();
+    int sampleWidth();
+    void sampleWidth(int width);
+    int sampleRate();
+    void sampleRate(int rate);
+    int A2DPRoute();
+    void A2DPRoute(int route);
+    //New AT commands
+    void authentication(int auth);
+    int authentication(void);
+    void classOfDevice(int cod);
+    int classOfDevice(void);
+    void discoveryMask(int mask);
+    int discoveryMask(void);
+    void connectionMask(int mask);
+    int connectionMask(void);
+    void microphoneLevel(int levels);
+    int microphoneLevel(void);
+    void pincode(String pinCode);
+    String pincode(void);
+    void toneGain(int gain);
+    int toneGain(void);
+    void connDelay(int cDelay);
+    int connDelay(void);
+    int pairingTimeout(void);
+    void pairingTimeout(int pTimeout);
+    String getBatteryLevel();
+    void uartBaud(int rate);
+    int uartBaud(void);
+    String firmwareV(void);
+    //H - Just read the AT guide.. http://ww1.microchip.com/downloads/en/DeviceDoc/50002154A.pdf
+    void authAcceptReject(bool action);
+    void enterDFU(void);
+    void redailLast(void);
+    void reconnectLast(void);
+    void acceptCall(void);
+    void killCall(void);
+    void killHeldCalls(void);
+    void killActiveCalls(void);
+    void holdActiveCalls(void);
+    void addActiveCall(void);
+    void transferActiveCall(void);
+    void swapActiveDevice(bool action); 
+    void activateVCApp(void);
+    void killConnection(int connID);
+    void muteCall(bool action); 
+    int queryState(void);
+    int hfpVolumeLevel(bool action);
+    String getCallerID(void);
+    String callerName(void);
+    String callerNumber(void);
+    void rebootDevice(void); 
+    void wipePairedDevices(void);
+};
+extern RN52_HardwareSerial6 RN52_Serial6;
+extern void serialEvent5(void);
+#endif
 
 #endif
 #endif
